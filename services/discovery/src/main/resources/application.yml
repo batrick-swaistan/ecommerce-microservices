@@ -1,0 +1,17 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: discovery-service
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false  # This indicates this is the Eureka Server itself
+    fetchRegistry: false       # Correct spelling here
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/  # Correct service URL and port reference
+
+server:
+  port: 8761  # This is the default port for Eureka
