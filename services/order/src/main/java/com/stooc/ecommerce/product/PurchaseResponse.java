@@ -1,8 +1,8 @@
-package com.stooc.ecommerce.record;
+package com.stooc.ecommerce.product;
 
 import java.math.BigDecimal;
 
-public record ProductPurchaseResponse(
+public record PurchaseResponse(
         Integer productId,
         String name,
         String description,

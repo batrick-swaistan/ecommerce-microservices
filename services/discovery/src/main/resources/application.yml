@@ -8,10 +8,10 @@ eureka:
   instance:
     hostname: localhost
   client:
-    registerWithEureka: false  # This indicates this is the Eureka Server itself
-    fetchRegistry: false       # Correct spelling here
+    registerWithEureka: false
+    fetchRegistry: false
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka/  # Correct service URL and port reference
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 
 server:
-  port: 8761  # This is the default port for Eureka
+  port: 8761
