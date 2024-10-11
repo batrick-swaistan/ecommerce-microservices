@@ -29,7 +29,12 @@ public class OrderController {
     public ResponseEntity<List<OrderResponse>> findAll(){
         List<OrderResponse> orderResponse = orderService.findAll();
         return ResponseEntity.ok(orderResponse);
+    }
 
+    @GetMapping("/{order-id}")
+    public ResponseEntity<OrderResponse>findById(@PathVariable("order-id") Integer orderId){
+        OrderResponse orderResponse = orderService.findById(orderId);
+        return ResponseEntity.ok(orderResponse);
     }
 
 

@@ -2,10 +2,11 @@ package com.stooc.ecommerce.service;
 
 import com.stooc.ecommerce.customer.CustomerClient;
 import com.stooc.ecommerce.entity.Order;
-import com.stooc.ecommerce.entity.OrderLine;
 import com.stooc.ecommerce.exception.BusinessException;
 import com.stooc.ecommerce.kafka.OrderConfirmation;
 import com.stooc.ecommerce.kafka.OrderProducer;
+import com.stooc.ecommerce.payment.PaymentClient;
+import com.stooc.ecommerce.payment.PaymentRequest;
 import com.stooc.ecommerce.product.ProductClient;
 import com.stooc.ecommerce.records.OrderLineRequest;
 import com.stooc.ecommerce.records.OrderRequest;
@@ -13,6 +14,7 @@ import com.stooc.ecommerce.records.OrderResponse;
 import com.stooc.ecommerce.records.PurchaseRequest;
 import com.stooc.ecommerce.repository.OrderLineRepository;
 import com.stooc.ecommerce.repository.OrderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,10 +29,11 @@ public class OrderService {
     private final CustomerClient customerClient;
     private final ProductClient productClient;
     private final OrderRepository orderRepository;
-    private final OrderlineService orderlineService;
+    private final OrderLineService orderlineService;
     private final OrderProducer orderProducer;
     private final OrderLineRepository orderLineRepository;
     private final OrderMapper orderMapper;
+    private final PaymentClient paymentClient;
 
     public Integer createOrder(@Valid OrderRequest orderRequest) {
         var customer = customerClient.findCustomerById(orderRequest.customerId())
@@ -56,6 +59,19 @@ public class OrderService {
                             purchaseRequest.quantity() )
             );
         }
+        var paymentRequest = new PaymentRequest(
+                null,
+                orderRequest.amount(),
+                orderRequest.paymentMethod(),
+                order.getId(),
+                order.getReference(),
+                customer
+
+        );
+
+        paymentClient.requestOrderPayment(paymentRequest);
+
+        //kafka
 
         orderProducer.sendOrderConfirmation(
                 new OrderConfirmation(
@@ -74,5 +90,11 @@ public class OrderService {
                 .stream()
                 .map(orderMapper::fromOrder)
                 .collect(Collectors.toList());
+    }
+
+    public OrderResponse findById(Integer orderId) {
+        return orderRepository.findById(orderId)
+                .map(orderMapper::fromOrder)
+                .orElseThrow(()-> new EntityNotFoundException("Order not found for the order::" + orderId));
     }
 }

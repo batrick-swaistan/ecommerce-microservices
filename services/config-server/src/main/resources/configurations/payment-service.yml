@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/order
+    url: jdbc:postgresql://localhost:5433/payment
     username: batrick
     password: password
     driver-class-name: org.postgresql.Driver
@@ -16,14 +16,6 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.type.mapping: orderConfirmation:com.stooc.ecommerce.kafka.OrderConfirmation
-
+        spring.json.type.mapping: paymentConfirmation:com.stooc.ecommerce.record.PaymentNotificationRequest
 server:
-  port: 8070
-
-
-application:
-  config:
-    customer-url: http://localhost:8222/api/v1/customers
-    payment-url:  http://localhost:8222/api/v1/payments
-    product-url: http://localhost:8222/api/v1/products
+  port: 8060
