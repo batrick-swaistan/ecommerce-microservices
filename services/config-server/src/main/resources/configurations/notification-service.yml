@@ -4,7 +4,7 @@ spring:
       username: batrick
       password: batrick
       host: localhost
-      port: 27017
+      port: 27018
       database: customer
       authentication-database: admin
 
@@ -17,7 +17,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: '*'
-        spring.json.type.mapping: orderConfirmation:com.stooc.ecommerce.kafka.OrderConfirmation,paymentConfirmation:com.stooc.ecommerce.kafka.PaymentNotificationRequest
+        spring.json.type.mapping: orderConfirmation:com.stooc.ecommerce.kafka.order.OrderConfirmation,paymentConfirmation:com.stooc.ecommerce.kafka.payment.PaymentConfirmation
 
   mail:
     host: localhost

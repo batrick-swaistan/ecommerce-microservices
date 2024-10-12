@@ -19,13 +19,8 @@ public class OrderLineService {
     private final OrderLineMapper orderLineMapper;
 
     public Integer saveOrderLine(OrderLineRequest orderLineRequest) {
-        OrderLine orderLine = new OrderLine();
-        orderLine.setId(orderLineRequest.id());
-        orderLine.setOrder(Order.builder().id(orderLineRequest.id()).build());
-        orderLine.setQuantity(orderLineRequest.quantity());
-        orderLine.setProductId(orderLineRequest.productId());
-        orderLineRepository.save(orderLine);
-        return orderLine.getId();
+        var order = orderLineMapper.toOrderLine(orderLineRequest);
+        return orderLineRepository.save(order).getId();
     }
 
     public List<OrderLineResponse> findAllByOrderId(Integer orderId) {
